@@ -1,0 +1,15 @@
+<div class="container">
+  <h2 class="card-title font-weight-bold"><%= @city.name %></h2>
+  <% @users.each do |u| %>
+    <% u.gossips.each do |g| %>
+			<div class="col-md-3">
+  			<div class="card mb-3" style="width: 18rem;">
+	  			<div class="card-body">
+            <h5 class="card-title"><a href="<%= gossip_path(g.id) %>"><%= g.title %></a></h5>
+          </div>
+          <div class="card-footer"><%= u.first_name %></div>
+  			</div>
+      </div>
+      <%end%>
+  	<%end%>
+  </div>
