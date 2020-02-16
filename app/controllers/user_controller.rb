@@ -4,12 +4,21 @@ class UserController < ApplicationController
   end
   
   def create
-    @user = User.new(last_name: params[:last_name], first_name: params[:first_name], age: params[:age], email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation], city: City.last) # avec xxx qui sont les données obtenues à partir du formulaire
+    @user = User.new(user_params)
+    @user.city_id = City.all.sample.id
 
-    if @user.save # essaie de sauvegarder en base @gossip
-      redirect_to root_index_path
+    puts "$" * 60
+    puts @user.last_name
+    puts @user.first_name
+    puts @user.age
+    puts @user.email
+    puts @user.city_id
+    puts "$" * 60
+
+
+    if @user.save
+      redirect_to root_path
     else
-    # sinon, il render la view new (qui est celle sur laquelle on est déjà)
       render 'new'
     end
   end
@@ -17,6 +26,12 @@ class UserController < ApplicationController
   def show
     @user = User.find(params[:id])
     @id = @user.city.id
+  end
+
+  private
+
+  def user_params
+     params.require(:user).permit(:last_name, :first_name, :age, :email, :password, :password_confirmation)
   end
 
 end
