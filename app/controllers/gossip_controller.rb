@@ -1,13 +1,14 @@
 class GossipController < ApplicationController
+  before_action :authenticate_user
+
   def show
     @gossip =  Gossip.find(params[:id])
     @c_id = @gossip.user.city.id
     @u_id = @gossip.user.id
     @comments = Gossip.find(params[:id]).comments
-    @comment = @gossip.comments.new
+    @comment =  Comment.new
   end
-
-  before_action :authenticate_user, only: [:index]
+  
   def new
     @gossip = Gossip.new
   end
@@ -15,11 +16,10 @@ class GossipController < ApplicationController
   def create
     @gossip = Gossip.create(title: params[:title], content: params[:content])
     @gossip.user = User.find_by(id: session[:user_id])
-    if @gossip.save # essaie de sauvegarder en base @gossip
+    if @gossip.save
       flash[:success] = "Potin bien créé !"
-      redirect_to root_index_path
+      redirect_to root_path
     else
-    # sinon, il render la view new (qui est celle sur laquelle on est déjà)
       render 'new'
     end
   end
